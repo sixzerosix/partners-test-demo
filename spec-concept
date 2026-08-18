@@ -1,0 +1,4580 @@
+Да. И я бы здесь уже не просто заменил `Vite → Next.js`, а немного **повысил планку архитектуры**.
+
+На август 2026 года актуальная ветка Next.js — **16.x**, причем в официальном блоге уже есть Next.js 16.2 и последующие обновления безопасности; поэтому в промпте лучше не хардкодить конкретный patch/minor, а требовать `latest stable` на момент запуска и обязательную проверку через MCP / официальную документацию. Next.js 16 также уже ориентирован на App Router, Turbopack, React Compiler и современные механизмы кэширования. ([Next.js][1])
+
+У shadcn/ui сейчас тоже поменялся подход: они рекомендуют актуальный CLI / `shadcn/create`, а компоненты устанавливаются непосредственно в проект, то есть это не «черный ящик UI-библиотеки», а код компонентов, которым ты владеешь и который можешь адаптировать. Для Next.js официальный путь — через актуальный `shadcn` CLI. ([Shadcn][2])
+
+И да: правильно **Lucide**, пакет — `lucide-react`. Он также входит в официальный рекомендуемый набор зависимостей shadcn. ([Shadcn][3])
+
+Ниже уже готовый **цельный промпт**, который можно отдавать агенту.
+
+---
+
+# PROMPT ДЛЯ AI-АГЕНТА — NEXT.JS + SHADCN/UI
+
+## РОЛЬ
+
+Ты выступаешь одновременно как:
+
+* Senior Product Designer
+* Senior UX Architect
+* Senior Frontend Engineer
+* Senior TypeScript Engineer
+* SaaS Product Architect
+* UI Systems Designer
+
+Твоя задача — не просто сверстать набор страниц, а **спроектировать и реализовать полноценный высококачественный функциональный prototype партнерской / affiliate management платформы**, максимально приближенный к реальному production SaaS продукту.
+
+Система должна состоять из двух основных приложений / режимов:
+
+1. **Partner Portal** — личный кабинет партнера.
+2. **Admin Portal** — кабинет владельца партнерской программы.
+
+При этом оба интерфейса должны использовать общую дизайн-систему, общие domain models, общую логику mock data и общие reusable components.
+
+---
+
+# 1. ГЛАВНЫЙ ПРИНЦИП
+
+Не делай это как простой UI mockup.
+
+Мне нужен:
+
+> **Functional product prototype**
+
+То есть пользователь должен реально взаимодействовать с системой.
+
+Не должно быть ситуации:
+
+```text
+кнопка → ничего не происходит
+```
+
+или:
+
+```text
+таблица → просто статичный массив
+```
+
+или:
+
+```text
+Create Partner → console.log()
+```
+
+Каждое значимое действие должно менять состояние приложения.
+
+Если настоящего backend пока нет — **симулируй backend через mock service layer**, async functions, локальное состояние и persistent storage.
+
+---
+
+# 2. ТЕХНОЛОГИЧЕСКИЙ СТЕК
+
+Используй исключительно современный актуальный стек.
+
+На момент начала работы:
+
+**обязательно проверь актуальные stable-версии через Context7 / MCP / официальную документацию.**
+
+Не используй устаревшие версии только потому, что они знакомы тебе.
+
+### Core
+
+* Next.js — latest stable
+* React — latest compatible stable
+* TypeScript — latest compatible stable
+
+Используй **App Router**.
+
+### UI
+
+* shadcn/ui — latest
+* Tailwind CSS — latest compatible
+* Lucide React — latest
+
+### State
+
+* Zustand
+
+### Forms
+
+* React Hook Form
+
+### Validation
+
+* Zod
+
+### Theme
+
+* next-themes
+
+### Charts
+
+Используй современную React-compatible chart library, например:
+
+* Recharts
+
+или другую актуальную библиотеку, если она лучше совместима с текущим Next.js.
+
+### Utility
+
+Разрешено использовать:
+
+* clsx
+* tailwind-merge
+* class-variance-authority
+* date-fns
+
+и необходимые официальные / общепринятые utility packages.
+
+Не устанавливай десятки библиотек без необходимости.
+
+---
+
+# 3. ПРОВЕРКА АКТУАЛЬНОСТИ СТЕКА
+
+Перед реализацией:
+
+1. Проверь текущую stable-версию Next.js.
+2. Проверь совместимую версию React.
+3. Проверь актуальную установку shadcn/ui.
+4. Проверь актуальную структуру компонентов shadcn.
+5. Проверь актуальную версию Tailwind.
+6. Проверь текущие рекомендации Next.js по Server / Client Components.
+7. Проверь актуальные рекомендации Next.js по caching / rendering.
+8. Проверь актуальные API Zustand.
+9. Проверь текущие версии React Hook Form и Zod.
+10. Проверь актуальную документацию Lucide React.
+
+Для документации используй доступный Context7 / MCP и официальные источники.
+
+Не придумывай API библиотек.
+
+---
+
+# 4. SHADCN/UI
+
+Используй **стандартный shadcn/ui без кастомного яркого preset**.
+
+Мне нужен стандартный:
+
+* monochrome
+* neutral
+* black / white
+* professional
+* minimal
+
+визуальный стиль.
+
+Не нужно на старте придумывать фирменную цветовую систему.
+
+Используй стандартную shadcn-тему как основу.
+
+При этом архитектура должна позволять позже легко изменить branding.
+
+Важно:
+
+shadcn/ui — это не внешняя runtime component library.
+
+Используй реальные компоненты shadcn, установленные в проект.
+
+Например:
+
+```text
+components/ui/
+  button.tsx
+  card.tsx
+  dialog.tsx
+  drawer.tsx
+  table.tsx
+  input.tsx
+  select.tsx
+  tabs.tsx
+  dropdown-menu.tsx
+  tooltip.tsx
+  badge.tsx
+  ...
+```
+
+Не создавай альтернативную UI-библиотеку поверх shadcn без необходимости.
+
+---
+
+# 5. ВИЗУАЛЬНЫЙ СТИЛЬ
+
+Основная визуальная философия:
+
+> Professional B2B SaaS / Fintech / Affiliate infrastructure.
+
+Не делай:
+
+* кислотные цвета
+* огромные градиенты
+* стеклянные карточки везде
+* чрезмерные blur effects
+* декоративную графику ради декоративной графики
+* огромные цифры на половину экрана
+* dashboard из одинаковых карточек
+* чрезмерно округленный интерфейс
+
+Нужен:
+
+* clean
+* restrained
+* dense but readable
+* premium
+* enterprise-ready
+* minimal
+* systematic
+
+Используй:
+
+* тонкие borders
+* neutral surfaces
+* subtle shadows
+* аккуратные hover states
+* понятную typography hierarchy
+* consistent spacing
+
+---
+
+# 6. NEXT.JS ARCHITECTURE
+
+Используй App Router.
+
+Архитектуру сделай примерно такой:
+
+```text
+src/
+  app/
+    (auth)/
+    (dashboard)/
+      partner/
+      admin/
+    api/
+  components/
+    ui/
+    layout/
+    navigation/
+    dashboard/
+    charts/
+    tables/
+    forms/
+    modals/
+    drawers/
+  features/
+    partner/
+    admin/
+    analytics/
+    campaigns/
+    payouts/
+    commissions/
+    referrals/
+    customers/
+  lib/
+    utils/
+    validators/
+    formatters/
+    permissions/
+  services/
+    mock/
+    repositories/
+  stores/
+  hooks/
+  types/
+  data/
+  config/
+```
+
+Не обязательно копировать структуру буквально.
+
+Главное — разделить:
+
+* UI
+* domain logic
+* state
+* services
+* mock data
+* validation
+* types
+
+---
+
+# 7. SERVER VS CLIENT COMPONENTS
+
+Используй современные возможности Next.js.
+
+По умолчанию:
+
+> Server Component.
+
+`"use client"` используй только там, где действительно требуется:
+
+* local interaction
+* Zustand
+* browser APIs
+* event handlers
+* form interaction
+* charts
+* dialogs
+* dropdown state
+* interactive tables
+
+Не превращай весь проект в огромный Client Component.
+
+---
+
+# 8. STATE MANAGEMENT — ZUSTAND
+
+Используй Zustand как основной client-side application state.
+
+Создай раздел stores.
+
+Например:
+
+```text
+stores/
+  app-store.ts
+  auth-store.ts
+  partner-store.ts
+  admin-store.ts
+  notification-store.ts
+  ui-store.ts
+```
+
+Не складывай абсолютно всё в один store.
+
+State должен быть логически разделен.
+
+---
+
+# 9. LOCAL PERSISTENCE
+
+Используй persistence там, где это имеет смысл:
+
+* theme
+* selected role
+* selected demo user
+* certain preferences
+* table preferences
+* notification read state
+* mock mutations
+
+Можно использовать Zustand persist middleware.
+
+После refresh изменения demo state по возможности должны сохраняться.
+
+---
+
+# 10. FORMS
+
+Все сложные формы реализовать через:
+
+* React Hook Form
+* Zod resolver
+
+Например:
+
+```text
+CreatePartnerSchema
+CreateCampaignSchema
+CreateReferralLinkSchema
+RequestPayoutSchema
+UpdateCommissionSchema
+ProgramSettingsSchema
+```
+
+Форма должна иметь:
+
+* validation
+* inline errors
+* disabled submit during processing
+* loading state
+* success state
+* error state
+
+---
+
+# 11. ZOD
+
+Zod должен выступать source of truth для входных данных форм и важных операций.
+
+Например:
+
+```text
+partner.schema.ts
+campaign.schema.ts
+payout.schema.ts
+commission.schema.ts
+```
+
+Типы выводи через:
+
+```ts
+z.infer<typeof Schema>
+```
+
+Не дублируй типы вручную, когда они естественно выводятся из schema.
+
+---
+
+# 12. URL ROUTING
+
+Используй полноценный routing.
+
+Пример:
+
+```text
+/partner
+/partner/analytics
+/partner/referrals
+/partner/customers
+/partner/commissions
+/partner/payouts
+/partner/campaigns
+/partner/links
+/partner/materials
+/partner/rewards
+/partner/notifications
+/partner/support
+/partner/settings
+```
+
+Admin:
+
+```text
+/admin
+/admin/partners
+/admin/partners/[id]
+/admin/applications
+/admin/customers
+/admin/customers/[id]
+/admin/referrals
+/admin/commissions
+/admin/payouts
+/admin/campaigns
+/admin/campaigns/[id]
+/admin/links
+/admin/materials
+/admin/analytics
+/admin/risk
+/admin/messages
+/admin/reports
+/admin/settings
+```
+
+Используй dynamic routes там, где они логичны.
+
+---
+
+# 13. AUTH / DEMO ROLE SYSTEM
+
+Настоящая authentication infrastructure сейчас не нужна.
+
+Но UX должен выглядеть как реальная система.
+
+Сделай mock auth layer:
+
+```text
+Admin
+Partner
+```
+
+Demo users:
+
+```text
+Admin — Program Owner
+
+Alex Johnson — Pro Partner
+
+Sarah Williams — Growth Partner
+
+Michael Brown — Starter Partner
+```
+
+Добавь demo login / role switching.
+
+---
+
+# 14. DEMO MODE
+
+Сделай специальный:
+
+```text
+Demo Mode
+```
+
+Например в user menu или development controls.
+
+Можно переключать:
+
+```text
+View as:
+Admin
+Alex Johnson
+Sarah Williams
+Michael Brown
+```
+
+После переключения:
+
+* navigation меняется
+* permissions меняются
+* dashboard data меняется
+* user profile меняется
+
+---
+
+# 15. PERMISSION MODEL
+
+Даже без настоящего authorization backend реализуй permission layer.
+
+Например:
+
+```text
+role:
+  admin
+  partner
+```
+
+И permissions:
+
+```text
+partners.read
+partners.write
+payouts.read
+payouts.approve
+campaigns.create
+commissions.adjust
+reports.export
+```
+
+Не показывай partner интерфейсу admin-only actions.
+
+---
+
+# 16. GLOBAL APP SHELL
+
+Сделай полноценный application shell.
+
+Desktop:
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ Topbar                                                       │
+├────────────────┬─────────────────────────────────────────────┤
+│                │                                             │
+│ Sidebar        │              Main Content                   │
+│                │                                             │
+│                │                                             │
+└────────────────┴─────────────────────────────────────────────┘
+```
+
+---
+
+# 17. SIDEBAR
+
+Sidebar:
+
+* logo
+* application name
+* workspace
+* primary navigation
+* notification badges
+* active state
+* collapse
+* bottom actions
+* help
+* settings
+* account
+
+Sidebar должен поддерживать:
+
+* desktop expanded
+* desktop collapsed
+* mobile drawer
+
+---
+
+# 18. TOPBAR
+
+Topbar:
+
+* breadcrumb
+* global search
+* notifications
+* theme switch
+* demo role switcher
+* profile menu
+
+Добавь command palette.
+
+---
+
+# 19. COMMAND PALETTE
+
+Сделай `Cmd/Ctrl + K`.
+
+Search:
+
+```text
+Partners
+Customers
+Campaigns
+Payouts
+Reports
+Settings
+```
+
+Actions:
+
+```text
+Create partner
+Create campaign
+Request payout
+Switch to Admin
+Switch to Partner
+```
+
+---
+
+# 20. THEME SYSTEM
+
+Используй `next-themes`.
+
+Минимум:
+
+* Light
+* Dark
+* System
+
+Основная тема должна оставаться стандартной monochrome shadcn.
+
+Пользовательская настройка должна сохраняться.
+
+Shadcn официально описывает интеграцию с `next-themes` для Next.js. ([Shadcn][4])
+
+---
+
+# 21. GLOBAL NOTIFICATIONS
+
+Сделай notification system.
+
+Типы:
+
+```text
+info
+success
+warning
+error
+```
+
+Notifications:
+
+```text
+New partner application
+Payout requested
+Campaign expiring
+Commission approved
+Risk detected
+Partner milestone reached
+```
+
+Должны поддерживаться:
+
+* unread
+* read
+* mark all as read
+* timestamps
+* navigation to related entity
+
+---
+
+# 22. TOAST SYSTEM
+
+Для mutation actions:
+
+```text
+Partner created
+Partner approved
+Campaign created
+Referral link copied
+Payout requested
+Commission adjusted
+Settings saved
+Report generated
+```
+
+---
+
+# 23. CONFIRMATION DIALOGS
+
+Все destructive / sensitive actions требуют confirmation.
+
+Например:
+
+```text
+Suspend partner?
+Delete campaign?
+Reverse commission?
+Reject application?
+Cancel payout?
+```
+
+---
+
+# 24. MOCK BACKEND
+
+Сделай service / repository layer.
+
+Например:
+
+```text
+services/
+  mock/
+    partners.ts
+    customers.ts
+    referrals.ts
+    commissions.ts
+    payouts.ts
+    campaigns.ts
+    analytics.ts
+```
+
+Пример:
+
+```ts
+async function getPartners()
+async function getPartnerById(id)
+async function createPartner(data)
+async function updatePartner(id, data)
+```
+
+Каждый service должен вести себя как API:
+
+* async
+* latency simulation
+* error simulation
+* consistent return types
+
+---
+
+# 25. MOCK DATABASE
+
+Создай связанные domain entities.
+
+Минимальный dataset:
+
+```text
+Partners: 50+
+Customers: 100+
+Referrals: 300+
+Transactions: 200+
+Commissions: 200+
+Payouts: 50+
+Campaigns: 10+
+Promo Materials: 20+
+Applications: 15+
+Notifications: 30+
+Messages: 50+
+Audit Events: 100+
+```
+
+---
+
+# 26. DOMAIN MODEL
+
+Продумай связи.
+
+Основная модель:
+
+```text
+Partner
+   ↓
+Campaign
+   ↓
+Referral Link
+   ↓
+Referral
+   ↓
+Customer
+   ↓
+Transaction
+   ↓
+Commission
+   ↓
+Payout
+```
+
+А также:
+
+```text
+Partner
+  ↓
+Tier
+  ↓
+Commission Rule
+```
+
+и:
+
+```text
+Partner
+  ↓
+Risk Events
+```
+
+---
+
+# 27. REAL DATA RELATIONSHIPS
+
+Не делай все числа random.
+
+Например:
+
+Если partner имеет:
+
+```text
+$84,000 revenue
+```
+
+то эта сумма должна быть логически связана с его customers / transactions.
+
+Комиссия должна рассчитываться или хотя бы агрегироваться из transaction-level data.
+
+Dashboard KPI должны отражать состояние mock store.
+
+---
+
+# 28. SIMULATED API LATENCY
+
+Каждый mock request:
+
+```text
+300–700ms
+```
+
+Можно сделать небольшой random delay.
+
+Это позволит реально проверить:
+
+* skeleton
+* loading
+* disabled buttons
+* transition states
+
+---
+
+# 29. ERROR SIMULATION
+
+Добавь возможность mock service иногда возвращать ошибку.
+
+Например:
+
+```text
+3–5% mutation failure
+```
+
+или deterministic error mode для demo.
+
+Должны существовать:
+
+* retry
+* error toast
+* inline error
+* preserved form state
+
+---
+
+# 30. PARTNER PORTAL
+
+Navigation:
+
+```text
+Overview
+Analytics
+Referrals
+Customers
+Commissions
+Payouts
+Campaigns
+Referral Links
+Promo Materials
+Rewards
+Notifications
+Support
+Settings
+```
+
+---
+
+# 31. PARTNER OVERVIEW
+
+Header:
+
+```text
+Good morning, Alex
+
+Here's what's happening with your partner account.
+```
+
+Date range:
+
+```text
+Today
+7 days
+30 days
+90 days
+This year
+Custom
+```
+
+KPI:
+
+```text
+Clicks
+Leads
+Customers
+Conversion Rate
+Revenue Generated
+Commission
+Pending Commission
+Available Balance
+```
+
+Каждый KPI:
+
+* current value
+* delta
+* comparison
+* tooltip
+* optional trend
+
+---
+
+# 32. PARTNER ANALYTICS
+
+Charts:
+
+### Revenue
+
+Line chart.
+
+### Clicks / conversions
+
+Combined chart.
+
+### Commission
+
+Area chart.
+
+### Funnel
+
+```text
+Clicks
+ ↓
+Visitors
+ ↓
+Signups
+ ↓
+Qualified Leads
+ ↓
+Customers
+```
+
+### Geography
+
+Countries:
+
+* visitors
+* customers
+* revenue
+* commission
+
+### Sources
+
+```text
+YouTube
+Blog
+Newsletter
+Google
+Social
+Direct
+```
+
+### Devices
+
+* Desktop
+* Mobile
+* Tablet
+
+---
+
+# 33. PARTNER REFERRALS
+
+Table:
+
+```text
+Date
+Visitor
+Referral Link
+Source
+Country
+Device
+Status
+Customer
+Revenue
+Commission
+```
+
+Features:
+
+* search
+* filtering
+* sorting
+* date filtering
+* pagination
+* CSV export
+* column visibility
+* row selection
+* detail drawer
+
+---
+
+# 34. PARTNER CUSTOMERS
+
+Table:
+
+```text
+Customer
+Email
+Signup Date
+Plan
+MRR
+Status
+LTV
+Commission
+Last Activity
+```
+
+Status:
+
+```text
+Trial
+Active
+Past Due
+Cancelled
+```
+
+Click row → customer detail drawer/page.
+
+---
+
+# 35. PARTNER COMMISSIONS
+
+KPI:
+
+```text
+Total Earned
+Pending
+Approved
+Paid
+Reversed
+Disputed
+```
+
+Table:
+
+```text
+Transaction
+Customer
+Amount
+Rate
+Commission
+Status
+Date
+```
+
+Statuses:
+
+```text
+Pending
+Approved
+Paid
+Reversed
+Disputed
+```
+
+---
+
+# 36. PARTNER PAYOUTS
+
+KPI:
+
+```text
+Available Balance
+Pending
+Lifetime Paid
+```
+
+Button:
+
+```text
+Request payout
+```
+
+Form:
+
+```text
+Amount
+Payment Method
+Account
+```
+
+Payment methods:
+
+```text
+Bank Transfer
+PayPal
+Stripe
+Wise
+```
+
+Validation:
+
+* minimum payout
+* insufficient balance
+* invalid amount
+* payout method required
+
+После submit:
+
+```text
+Pending
+```
+
+---
+
+# 37. PARTNER REFERRAL LINKS
+
+Create form:
+
+```text
+Campaign
+Landing Page
+Custom Slug
+UTM Source
+UTM Medium
+UTM Campaign
+UTM Content
+```
+
+Generated:
+
+```text
+https://example.com/?ref=alex
+```
+
+Actions:
+
+```text
+Copy
+Edit
+Duplicate
+Archive
+```
+
+Stats:
+
+```text
+Clicks
+Conversions
+Revenue
+Commission
+```
+
+---
+
+# 38. PARTNER CAMPAIGNS
+
+Campaign list.
+
+Fields:
+
+```text
+Name
+Description
+Commission
+Cookie Duration
+Start Date
+End Date
+Status
+```
+
+Campaign detail:
+
+```text
+Overview
+Commission
+Landing Pages
+Assets
+Performance
+```
+
+---
+
+# 39. PARTNER PROMO MATERIALS
+
+Types:
+
+```text
+Banner
+Image
+Video
+Logo
+Email Template
+Social Post
+Document
+Landing Page
+```
+
+Actions:
+
+```text
+Preview
+Download
+Copy Link
+```
+
+---
+
+# 40. PARTNER REWARDS / TIERS
+
+Tiers:
+
+```text
+Starter
+Growth
+Pro
+Elite
+```
+
+Each tier:
+
+* revenue threshold
+* commission
+* bonuses
+* perks
+
+Progress:
+
+```text
+$8,240 / $10,000
+82% to Pro
+```
+
+---
+
+# 41. PARTNER SETTINGS
+
+Tabs:
+
+```text
+Profile
+Security
+Notifications
+Payouts
+Tracking
+Preferences
+```
+
+Profile:
+
+```text
+Name
+Email
+Company
+Country
+Website
+Avatar
+```
+
+Notifications:
+
+```text
+Email
+Payout
+Marketing
+Weekly Reports
+```
+
+Payout:
+
+```text
+Payment Method
+Account
+Minimum Threshold
+```
+
+---
+
+# 42. ADMIN PORTAL
+
+Navigation:
+
+```text
+Overview
+Partners
+Applications
+Customers
+Referrals
+Commissions
+Payouts
+Campaigns
+Referral Links
+Promo Materials
+Analytics
+Fraud & Risk
+Messages
+Reports
+Audit Log
+Settings
+```
+
+---
+
+# 43. ADMIN OVERVIEW
+
+KPI:
+
+```text
+Total Partners
+Active Partners
+New Partners
+Revenue
+Commission
+Pending Payouts
+Conversion Rate
+CAC
+LTV
+```
+
+Charts:
+
+* Revenue
+* Commission
+* Partners
+* Customers
+* Conversions
+
+---
+
+# 44. ADMIN PARTNERS
+
+Table:
+
+```text
+Partner
+Status
+Tier
+Clicks
+Customers
+Revenue
+Commission
+Balance
+Risk
+Last Activity
+Joined
+```
+
+Filters:
+
+```text
+Status
+Tier
+Country
+Revenue
+Activity
+Risk
+Date Joined
+```
+
+Bulk actions:
+
+```text
+Approve
+Activate
+Suspend
+Change Tier
+Send Message
+Export
+```
+
+---
+
+# 45. PARTNER DETAIL
+
+Header:
+
+```text
+Avatar
+Alex Johnson
+@alex
+Pro
+Active
+```
+
+Actions:
+
+```text
+Edit
+Suspend
+Message
+Adjust Balance
+Change Tier
+```
+
+Tabs:
+
+```text
+Overview
+Performance
+Customers
+Commissions
+Payouts
+Referrals
+Links
+Activity
+Notes
+```
+
+---
+
+# 46. ADMIN PARTNER OVERVIEW
+
+KPIs:
+
+```text
+Revenue
+Clicks
+Customers
+Conversion
+Commission
+AOV
+LTV
+```
+
+Charts.
+
+Recent transactions.
+
+Activity.
+
+Admin notes.
+
+---
+
+# 47. APPLICATIONS
+
+Statuses:
+
+```text
+Pending
+Reviewing
+Approved
+Rejected
+```
+
+Application:
+
+```text
+Name
+Company
+Website
+Traffic
+Audience
+Social Profiles
+Expected Traffic
+Why Join
+```
+
+Actions:
+
+```text
+Approve
+Reject
+Request Information
+```
+
+---
+
+# 48. ADMIN COMMISSIONS
+
+Filters:
+
+```text
+Status
+Partner
+Customer
+Campaign
+Date
+Amount
+```
+
+Actions:
+
+```text
+Approve
+Reverse
+Adjust
+Add Manual Commission
+```
+
+Manual commission form:
+
+```text
+Partner
+Amount
+Reason
+Type
+Notes
+```
+
+---
+
+# 49. ADMIN PAYOUTS
+
+Statuses:
+
+```text
+Pending
+Processing
+Paid
+Failed
+Rejected
+```
+
+Table:
+
+```text
+Payout ID
+Partner
+Amount
+Method
+Requested
+Status
+```
+
+Actions:
+
+```text
+Approve
+Reject
+Process
+Mark Paid
+Retry
+```
+
+---
+
+# 50. PAYOUT DETAIL
+
+Показать:
+
+```text
+Payout Information
+Partner
+Amount
+Method
+Destination
+Included Transactions
+Timeline
+Notes
+```
+
+Timeline:
+
+```text
+Requested
+Approved
+Processing
+Paid
+```
+
+---
+
+# 51. ADMIN CAMPAIGNS
+
+Create:
+
+```text
+Name
+Description
+Commission Type
+Commission Value
+Cookie Duration
+Start
+End
+Landing Page
+Status
+```
+
+Commission types:
+
+```text
+Percentage
+Fixed
+Recurring
+Hybrid
+```
+
+Campaign analytics.
+
+---
+
+# 52. ADMIN TIERS
+
+Tier editor:
+
+```text
+Starter
+Growth
+Pro
+Elite
+```
+
+Rules:
+
+```text
+Minimum Revenue
+Commission
+Bonus
+Benefits
+```
+
+Добавь drag/reordering только если это действительно хорошо вписывается в UX.
+
+---
+
+# 53. ADMIN REFERRAL LINKS
+
+Table:
+
+```text
+Partner
+URL
+Campaign
+Clicks
+Conversions
+Revenue
+Commission
+Created
+Status
+```
+
+Actions:
+
+```text
+Edit
+Disable
+Duplicate
+Archive
+```
+
+---
+
+# 54. ADMIN CUSTOMERS
+
+CRM:
+
+```text
+Customer
+Partner
+Plan
+MRR
+Status
+Signup
+Revenue
+Commission
+```
+
+Customer detail должен визуально показывать attribution chain:
+
+```text
+Customer
+ ↓
+Partner
+ ↓
+Referral Link
+ ↓
+Campaign
+ ↓
+Commission
+```
+
+---
+
+# 55. FRAUD & RISK
+
+Отдельный раздел.
+
+Risk indicators:
+
+```text
+Suspicious Click Spike
+Repeated IP
+Abnormal Conversion
+Duplicate Customer
+Self Referral
+Payout Anomaly
+Traffic Anomaly
+```
+
+Risk:
+
+```text
+Low
+Medium
+High
+Critical
+```
+
+Actions:
+
+```text
+Review
+Flag
+Dismiss
+Suspend Partner
+```
+
+---
+
+# 56. ADMIN ANALYTICS
+
+Фильтры:
+
+```text
+Date
+Partner
+Campaign
+Country
+Source
+```
+
+Charts:
+
+```text
+Revenue
+Commission
+Partner Acquisition
+Conversion Funnel
+Campaign Performance
+Country Performance
+Source Performance
+```
+
+Leaderboard:
+
+```text
+Rank
+Partner
+Revenue
+Customers
+Conversion
+Commission
+```
+
+---
+
+# 57. REPORTS
+
+Report builder:
+
+```text
+Report Type
+Date Range
+Filters
+Columns
+Format
+```
+
+Export:
+
+```text
+CSV
+JSON
+```
+
+После создания:
+
+```text
+Preparing report...
+
+Report ready
+
+Download
+```
+
+---
+
+# 58. MESSAGES
+
+Inbox:
+
+```text
+Partner
+Subject
+Last Message
+Status
+Date
+```
+
+Conversation UI:
+
+```text
+Admin
+Partner
+Admin
+Partner
+```
+
+Features:
+
+* unread
+* attachments mock
+* canned replies
+* send
+* optimistic UI
+
+---
+
+# 59. AUDIT LOG
+
+Admin audit log:
+
+```text
+Actor
+Action
+Entity
+Date
+IP
+Metadata
+```
+
+Examples:
+
+```text
+Partner created
+Partner approved
+Partner suspended
+Tier changed
+Commission adjusted
+Payout approved
+Campaign modified
+Settings updated
+```
+
+---
+
+# 60. SETTINGS
+
+Tabs:
+
+```text
+Program
+Commission
+Payouts
+Tracking
+Partners
+Notifications
+Branding
+Security
+Integrations
+```
+
+---
+
+# 61. PROGRAM SETTINGS
+
+Fields:
+
+```text
+Program Name
+Description
+Default Commission
+Cookie Duration
+Currency
+Timezone
+Minimum Payout
+Approval Mode
+```
+
+Approval:
+
+```text
+Automatic
+Manual
+```
+
+---
+
+# 62. COMMISSION SETTINGS
+
+Поддержка:
+
+```text
+Default Commission
+Recurring Commission
+Duration
+Tiers
+Bonuses
+Attribution Model
+```
+
+Attribution:
+
+```text
+First Click
+Last Click
+Linear
+Manual
+```
+
+---
+
+# 63. TRACKING SETTINGS
+
+```text
+Cookie Duration
+Tracking Domain
+Referral Parameter
+Cross Domain Tracking
+UTM Settings
+```
+
+---
+
+# 64. BRANDING SETTINGS
+
+В будущем:
+
+```text
+Logo
+Favicon
+Accent
+Program Name
+Email Branding
+```
+
+Пока достаточно mock upload / preview.
+
+---
+
+# 65. RESPONSIVE DESIGN
+
+Обязательно:
+
+```text
+390px
+768px
+1024px
+1280px
+1440px+
+```
+
+На mobile:
+
+* sidebar → drawer
+* tables → responsive presentation / horizontal scroll
+* filters → Sheet / Drawer
+* cards → stacked
+* charts → responsive
+* dialogs → mobile-friendly
+* forms → full width
+
+---
+
+# 66. TABLE SYSTEM
+
+Сделай reusable data table abstraction.
+
+Она должна уметь:
+
+* sorting
+* filtering
+* searching
+* pagination
+* row selection
+* bulk actions
+* column visibility
+* loading
+* empty
+* error
+* responsive behavior
+
+Не копируй table implementation на каждом экране.
+
+---
+
+# 67. DRAWER SYSTEM
+
+Используй shadcn Drawer / Sheet там, где detail interaction удобнее полноценного перехода.
+
+Например:
+
+* customer
+* transaction
+* referral
+* payout
+* partner quick view
+
+---
+
+# 68. MODAL SYSTEM
+
+Dialog:
+
+* create
+* edit
+* delete
+* confirmation
+* payout
+* commission
+* campaign
+* rejection
+* status change
+
+---
+
+# 69. CHART SYSTEM
+
+Используй реальную chart library.
+
+Графики должны получать данные из domain state.
+
+Не рисуй fake graph HTML-элементами.
+
+Tooltip:
+
+```text
+Date
+Value
+Comparison
+```
+
+---
+
+# 70. LOADING STATES
+
+Каждый async workflow должен иметь loading state.
+
+Используй:
+
+* Skeleton
+* Spinner там, где это действительно уместно
+* disabled button
+* pending labels
+
+Не используй глобальный spinner на весь сайт, если можно показать skeleton конкретной области.
+
+---
+
+# 71. EMPTY STATES
+
+Каждый список должен иметь настоящий empty state.
+
+Например:
+
+```text
+No campaigns yet
+
+Create your first campaign to start tracking partner performance.
+
+[Create campaign]
+```
+
+---
+
+# 72. ERROR STATES
+
+На уровне UX:
+
+```text
+Couldn’t load partners
+
+Something went wrong while loading partner data.
+
+[Retry]
+```
+
+Mutation:
+
+```text
+Couldn’t create partner
+
+Please try again.
+```
+
+---
+
+# 73. FORM UX
+
+Все формы:
+
+* labels
+* descriptions
+* inline errors
+* keyboard support
+* focus
+* disabled state
+* success state
+
+Ошибки Zod должны отображаться человеку понятно.
+
+Не показывай:
+
+```text
+Expected string, received undefined
+```
+
+в качестве UX.
+
+---
+
+# 74. ACCESSIBILITY
+
+Соблюдай:
+
+* semantic HTML
+* labels
+* aria attributes
+* focus visible
+* keyboard navigation
+* dialog focus trap
+* accessible tables
+* accessible forms
+* sufficient contrast
+
+---
+
+# 75. URL / STATE SYNC
+
+Где это полезно, синхронизируй UI filters с URL:
+
+```text
+?status=active
+&sort=revenue
+&page=2
+&search=alex
+```
+
+Это особенно важно для:
+
+* admin tables
+* analytics filters
+* partner lists
+
+---
+
+# 76. SEARCH
+
+Global search должен искать:
+
+```text
+Partners
+Customers
+Campaigns
+Referral Links
+Payouts
+Transactions
+```
+
+При выборе результата:
+
+* navigate
+* или open relevant detail
+
+---
+
+# 77. COMMAND PALETTE ACTIONS
+
+Например:
+
+```text
+Create Partner
+Create Campaign
+Create Referral Link
+Request Payout
+Open Reports
+Open Settings
+Switch Role
+Toggle Theme
+```
+
+---
+
+# 78. MICROINTERACTIONS
+
+Используй умеренно:
+
+* hover
+* focus
+* subtle transitions
+* page navigation
+* dialog
+* drawer
+* toast
+* skeleton
+
+Не делай motion-heavy интерфейс.
+
+---
+
+# 79. NO DEAD UI
+
+Категорически запрещено оставлять:
+
+```text
+<button>Export</button>
+```
+
+если Export ничего не делает.
+
+То же:
+
+```text
+Edit
+Delete
+Approve
+Suspend
+Save
+Create
+Retry
+Copy
+Download
+Send
+```
+
+Каждая кнопка должна иметь рабочее demo-поведение.
+
+---
+
+# 80. REALISTIC DATA
+
+Не использовать:
+
+```text
+John Doe
+Test Partner
+Foo
+Bar
+Lorem Ipsum
+12345
+```
+
+Повторяющиеся шаблонные данные также избегать.
+
+Используй реалистичный dataset:
+
+```text
+Alex Johnson
+Sarah Williams
+Michael Brown
+Daniel Carter
+Emma Thompson
+Olivia Martinez
+...
+```
+
+Разные страны:
+
+```text
+US
+UK
+Germany
+France
+Canada
+Australia
+Netherlands
+Spain
+Poland
+Singapore
+```
+
+---
+
+# 81. REALISTIC BUSINESS DATA
+
+Используй:
+
+* SaaS plans
+* MRR
+* ARR
+* commissions
+* refunds
+* payouts
+* conversion rate
+* CAC
+* LTV
+* revenue
+* clicks
+
+Числа должны быть взаимно правдоподобны.
+
+---
+
+# 82. BUSINESS RULES
+
+Добавь реальные бизнес-правила.
+
+Например:
+
+### Payout
+
+Нельзя запросить payout:
+
+```text
+amount > availableBalance
+```
+
+Нельзя запросить:
+
+```text
+amount < minimumPayout
+```
+
+### Commission
+
+Pending commission нельзя сразу считать fully paid.
+
+### Reversal
+
+Если transaction refunded:
+
+```text
+commission → reversed
+```
+
+### Partner
+
+Suspended partner:
+
+* не может создавать новые links
+* не может request payout
+* не может видеть некоторые restricted actions
+
+---
+
+# 83. COMMISSION ENGINE
+
+Сделай минимальный mock commission engine.
+
+Поддержать:
+
+```text
+percentage
+fixed
+recurring
+hybrid
+```
+
+Пример:
+
+```text
+transaction = $100
+commission = 20%
+
+commission = $20
+```
+
+Для tier:
+
+```text
+Starter = 10%
+Growth = 15%
+Pro = 20%
+Elite = 25%
+```
+
+Это должно отражаться при создании / изменении партнера.
+
+---
+
+# 84. REFERRAL SIMULATION
+
+Добавь demo-action:
+
+```text
+Simulate referral
+```
+
+После нажатия:
+
+```text
+Click created
+↓
+Visitor created
+↓
+Signup
+↓
+Customer
+↓
+Transaction
+↓
+Commission
+```
+
+Данные dashboard должны обновиться.
+
+---
+
+# 85. PAYOUT SIMULATION
+
+Workflow:
+
+```text
+Partner requests payout
+↓
+Admin receives payout
+↓
+Approve
+↓
+Processing
+↓
+Paid
+```
+
+После Paid:
+
+```text
+availableBalance decreases
+lifetimePaid increases
+payout becomes paid
+```
+
+---
+
+# 86. CAMPAIGN SIMULATION
+
+Admin:
+
+```text
+Create campaign
+```
+
+Partner:
+
+```text
+Sees campaign
+↓
+Creates referral link
+```
+
+Simulate:
+
+```text
+traffic
+conversion
+revenue
+commission
+```
+
+---
+
+# 87. ACTIVITY TIMELINE
+
+Каждая ключевая сущность может иметь activity:
+
+```text
+Partner approved
+Commission generated
+Payout requested
+Payout paid
+Campaign created
+Referral generated
+Customer converted
+```
+
+Показывай:
+
+* icon
+* description
+* actor
+* timestamp
+
+---
+
+# 88. NOTIFICATION CENTER
+
+Пример:
+
+```text
+New application
+2 minutes ago
+
+Payout requested
+8 minutes ago
+
+Commission approved
+1 hour ago
+
+Campaign expires soon
+3 hours ago
+```
+
+---
+
+# 89. DEMO DATA RESET
+
+Добавь:
+
+```text
+Reset Demo Data
+```
+
+После confirmation:
+
+```text
+All demo changes will be discarded.
+```
+
+После reset:
+
+* restore seed data
+* clear stores
+* clear local persistence
+
+---
+
+# 90. DEMO SCENARIO
+
+Сделай один заранее подготовленный сценарий.
+
+Например:
+
+```text
+Admin
+↓
+New Application
+↓
+Approve
+↓
+Partner created
+↓
+Partner login
+↓
+Create referral link
+↓
+Simulate referral
+↓
+Customer appears
+↓
+Commission appears
+↓
+Request payout
+↓
+Admin approves payout
+↓
+Partner balance updates
+```
+
+Это должен быть полностью проходящий demo flow.
+
+---
+
+# 91. PERFORMANCE
+
+Учитывай производительность.
+
+Особенно:
+
+* unnecessary client components
+* unnecessary re-renders
+* large tables
+* charts
+* memoization only where useful
+* image optimization
+* dynamic imports for expensive client components when useful
+
+Не используй premature optimization.
+
+Но и не делай архитектуру заведомо медленной.
+
+---
+
+# 92. NEXT.JS OPTIMIZATION
+
+Используй современные возможности Next.js там, где они реально помогают:
+
+* Server Components
+* streaming/loading UI
+* route-level loading states
+* `next/image`
+* `next/font`
+* smart prefetching
+* caching / revalidation where appropriate
+* dynamic imports для тяжелых interactive widgets
+
+Не нужно искусственно включать каждую новую feature Next.js.
+
+При использовании experimental APIs сначала проверь их актуальный статус в документации.
+
+---
+
+# 93. REACT COMPILER
+
+Если актуальная стабильная версия Next.js / React stack действительно рекомендует или поддерживает React Compiler для проекта — используй его, но только после проверки совместимости всех client-side dependencies.
+
+Не делай кастомные оптимизации вместо compiler без причины.
+
+---
+
+# 94. CODE QUALITY
+
+Код должен быть:
+
+* TypeScript strict
+* reusable
+* readable
+* predictable
+* maintainable
+* no unnecessary duplication
+
+Никакого:
+
+```text
+any
+```
+
+без очень веской причины.
+
+Не подавляй TypeScript errors через:
+
+```ts
+// @ts-ignore
+```
+
+без объяснимой необходимости.
+
+---
+
+# 95. STRICT TYPING
+
+Типизируй:
+
+* entities
+* API responses
+* mutation payloads
+* table data
+* chart data
+* user roles
+* permissions
+* statuses
+* enums / unions
+
+Например:
+
+```ts
+type PartnerStatus =
+  | "pending"
+  | "active"
+  | "suspended"
+  | "rejected"
+```
+
+---
+
+# 96. ERROR BOUNDARIES
+
+Добавь нормальную обработку:
+
+* route errors
+* not found
+* loading
+* generic error
+
+Для Next.js App Router используй соответствующие:
+
+```text
+loading.tsx
+error.tsx
+not-found.tsx
+```
+
+там, где это уместно.
+
+---
+
+# 97. NOT FOUND
+
+Например:
+
+```text
+Partner not found
+
+The partner you are looking for does not exist.
+
+[Back to partners]
+```
+
+---
+
+# 98. SEO / METADATA
+
+Даже dashboard pages должны иметь корректные:
+
+* title
+* metadata
+
+Например:
+
+```text
+Partners | Affiliate Platform
+Analytics | Affiliate Platform
+Payouts | Affiliate Platform
+```
+
+---
+
+# 99. SECURITY UX
+
+Настоящая security infrastructure не требуется.
+
+Но имитируй:
+
+* authorization
+* restricted actions
+* account switching
+* logout
+* session state
+
+Sensitive operations требуют confirmation.
+
+---
+
+# 100. ANALYTICS MODEL
+
+Не генерируй chart data отдельно от domain data.
+
+По возможности analytics должны рассчитываться через selectors / aggregation functions.
+
+Например:
+
+```text
+transactions
+→ revenueByDay()
+→ revenue chart
+```
+
+```text
+referrals
+→ conversionRate()
+```
+
+```text
+commissions
+→ commissionByMonth()
+```
+
+---
+
+# 101. SELECTORS
+
+Сделай отдельные selectors для Zustand/domain state.
+
+Например:
+
+```text
+getPartnerRevenue
+getPartnerCommission
+getPartnerCustomers
+getPendingPayouts
+getConversionRate
+```
+
+---
+
+# 102. FORMATTERS
+
+Сделай reusable formatters:
+
+```text
+formatCurrency()
+formatPercent()
+formatDate()
+formatRelativeTime()
+formatNumber()
+formatCompactNumber()
+```
+
+Например:
+
+```text
+$84,240
+18.4%
+84.2K
+2 hours ago
+```
+
+---
+
+# 103. INTERNATIONALIZATION PREPARATION
+
+Настоящую многоязычность можно не внедрять полностью.
+
+Но архитектура должна не блокировать i18n в будущем.
+
+Не зашивай абсолютно весь текст в сложно переиспользуемые компоненты таким образом, чтобы перевод потом требовал переписывания UI.
+
+---
+
+# 104. TIMEZONE / CURRENCY
+
+В program settings:
+
+```text
+Currency
+Timezone
+```
+
+Mock application должна их учитывать хотя бы на уровне display formatting.
+
+---
+
+# 105. EXPORT
+
+CSV export должен реально создавать файл.
+
+Не просто:
+
+```text
+toast("Exported")
+```
+
+А действительно сформировать:
+
+```text
+.csv
+```
+
+на основе текущего dataset / filters.
+
+---
+
+# 106. COPY TO CLIPBOARD
+
+Referral links должны реально копироваться через Clipboard API.
+
+После:
+
+```text
+Copied
+```
+
+---
+
+# 107. DOWNLOAD MOCK ASSETS
+
+Promo materials:
+
+```text
+Preview
+Download
+```
+
+должны реально инициировать download mock file / generated blob либо использовать локальные demo assets.
+
+---
+
+# 108. FILE UPLOAD SIMULATION
+
+Admin branding / promo upload:
+
+* drag & drop
+* file picker
+* preview
+* remove
+* loading
+* validation
+
+Настоящего облачного upload backend не требуется.
+
+---
+
+# 109. RESPONSIVE TABLE BEHAVIOR
+
+Не надо превращать все таблицы в нечитаемые 15-колоночные карточки.
+
+На desktop:
+
+полноценная table.
+
+На mobile:
+
+либо:
+
+* horizontal scroll
+
+либо:
+
+* priority columns + expandable row.
+
+Выбирай вариант исходя из конкретной таблицы.
+
+---
+
+# 110. FILTER UX
+
+Сложные фильтры:
+
+```text
+Sheet / Popover
+```
+
+Простые:
+
+```text
+inline
+```
+
+Не занимай половину экрана filters bar.
+
+---
+
+# 111. BULK OPERATIONS
+
+Admin tables:
+
+```text
+Select all
+Select rows
+Bulk action
+```
+
+Показывай:
+
+```text
+3 selected
+```
+
+и action bar.
+
+---
+
+# 112. COLUMN SETTINGS
+
+Добавь:
+
+```text
+Columns
+```
+
+позволяющий скрывать / показывать некоторые колонки.
+
+Пользовательские настройки можно сохранять в localStorage.
+
+---
+
+# 113. PAGINATION
+
+Поддерживать:
+
+```text
+10
+25
+50
+100
+```
+
+rows per page.
+
+---
+
+# 114. SEARCH DEBOUNCE
+
+Для client search, где это необходимо, используй debounce.
+
+---
+
+# 115. OPTIMISTIC UI
+
+Для некоторых быстрых действий допустимо использовать optimistic UI:
+
+* mark notification read
+* toggle preferences
+* copy
+* favorite
+* archive
+
+Но для критичных финансовых действий:
+
+* payouts
+* commission adjustments
+
+используй явный pending / success state.
+
+---
+
+# 116. FINANCIAL UX
+
+Финансовые данные должны отображаться очень аккуратно.
+
+Не используй визуально веселые цвета без причины.
+
+Статусы:
+
+* Pending
+* Approved
+* Paid
+* Failed
+* Reversed
+
+должны быть очевидны.
+
+Комиссионные суммы должны быть согласованы между:
+
+```text
+transaction
+commission
+balance
+payout
+```
+
+---
+
+# 117. ADMIN NOTES
+
+В partner profile добавь:
+
+```text
+Internal notes
+```
+
+Только admin.
+
+Partner их не видит.
+
+---
+
+# 118. PARTNER ACTIVITY VS ADMIN AUDIT
+
+Разделяй:
+
+### Partner Activity
+
+Что происходило с конкретным партнером.
+
+### Audit Log
+
+Что конкретно сделал сотрудник / admin.
+
+---
+
+# 119. MOBILE UX
+
+Не просто «чтобы не ломалось».
+
+Оптимизируй мобильные сценарии:
+
+Partner:
+
+```text
+Dashboard
+Referral link
+Commission
+Payout
+```
+
+Admin:
+
+```text
+Application review
+Partner details
+Payout approval
+Risk review
+```
+
+Именно эти действия должны быть удобными на mobile.
+
+---
+
+# 120. DESIGN SYSTEM
+
+Создай внутреннюю консистентную систему:
+
+* typography
+* spacing
+* radii
+* borders
+* shadows
+* form heights
+* button sizes
+* badge styles
+* table density
+* page header
+* section spacing
+
+Не создавай хаос из десятков случайных Tailwind classes.
+
+---
+
+# 121. PAGE STRUCTURE
+
+Каждая сложная страница должна иметь:
+
+```text
+Page Header
+ ├─ Title
+ ├─ Description
+ └─ Actions
+
+Filters / Controls
+
+Main Content
+
+Secondary Content
+```
+
+Не нужно на каждом экране повторять одинаковую структуру абсолютно механически, но hierarchy должна быть понятной.
+
+---
+
+# 122. DASHBOARD DENSITY
+
+Dashboard должен давать много информации, но быть читаемым.
+
+Не делай:
+
+```text
+8 huge cards
++ 4 huge charts
++ giant table
+```
+
+Лучше:
+
+```text
+KPI row
+↓
+Main chart + secondary insight
+↓
+Recent activity / performance
+↓
+Table
+```
+
+---
+
+# 123. ACCESSIBLE COLORS
+
+Не полагайся только на цвет.
+
+Например:
+
+```text
+✓ Paid
+! Pending
+× Failed
+↻ Processing
+```
+
+Можно использовать иконки + badge.
+
+---
+
+# 124. ICONOGRAPHY
+
+Используй **Lucide React**.
+
+Не смешивай:
+
+```text
+Lucide
+Font Awesome
+Heroicons
+random SVG
+```
+
+без необходимости.
+
+Иконки должны использоваться последовательно.
+
+Например:
+
+```text
+DollarSign
+Users
+MousePointerClick
+Link
+Wallet
+TrendingUp
+ShieldAlert
+Settings
+```
+
+---
+
+# 125. ICON ACCESSIBILITY
+
+Иконки-кнопки должны иметь:
+
+```text
+aria-label
+```
+
+Tooltips для неочевидных icon-only actions.
+
+---
+
+# 126. FORMS / SERVER ACTIONS
+
+Не нужно насильно использовать Server Actions для всей demo-логики.
+
+Для mock-first application можно использовать service layer + client state.
+
+Но если современный Next.js API / Server Actions реально улучшает конкретный workflow — можешь использовать.
+
+Главное — не перемешивать без системы.
+
+---
+
+# 127. API-READY ARCHITECTURE
+
+Компоненты не должны знать:
+
+```text
+mock data exists
+```
+
+Например:
+
+не:
+
+```tsx
+<PartnersTable partners={MOCK_PARTNERS} />
+```
+
+везде напрямую.
+
+А через repository / service abstraction:
+
+```text
+Partners feature
+    ↓
+Partner service
+    ↓
+Mock repository
+```
+
+Позже:
+
+```text
+Mock repository
+↓
+REST / GraphQL / tRPC backend
+```
+
+можно заменить.
+
+---
+
+# 128. REPOSITORY PATTERN
+
+Можно использовать:
+
+```text
+repositories/
+  partner-repository.ts
+  customer-repository.ts
+  payout-repository.ts
+```
+
+Interface:
+
+```ts
+interface PartnerRepository {
+  getAll(): Promise<Partner[]>
+  getById(id: string): Promise<Partner | null>
+  create(input: CreatePartnerInput): Promise<Partner>
+  update(...): Promise<Partner>
+}
+```
+
+Mock implementation:
+
+```text
+MockPartnerRepository
+```
+
+---
+
+# 129. TESTABILITY
+
+Подготовь архитектуру так, чтобы domain logic можно было легко тестировать.
+
+Особенно:
+
+* commission calculation
+* payout rules
+* tier logic
+* aggregation
+* filtering
+* permission checks
+
+---
+
+# 130. TESTS
+
+Если среда и время позволяют, добавь базовые unit tests для:
+
+```text
+commission calculations
+payout validation
+tier calculations
+permission checks
+formatters
+aggregation functions
+```
+
+Не обязательно тестировать каждый визуальный компонент.
+
+---
+
+# 131. LINT / FORMAT
+
+Настрой современный quality tooling:
+
+* TypeScript
+* ESLint или актуальный рекомендуемый linting stack
+* Prettier, если он уместен
+* consistent import ordering
+* no unused imports
+* no unused variables
+
+Не используй устаревшие Next-specific lint commands, если они удалены / deprecated в используемой версии Next.js. В Next.js 16, например, `next lint` был удален; официальный путь — использовать ESLint или другой современный lint tool отдельно. ([Next.js][1])
+
+---
+
+# 132. BUILD VALIDATION
+
+Перед завершением обязательно выполнить:
+
+```bash
+npm run build
+```
+
+и устранить ошибки.
+
+Также:
+
+```bash
+npm run lint
+```
+
+если настроен соответствующий script.
+
+TypeScript errors также должны быть устранены.
+
+---
+
+# 133. NO CONSOLE NOISE
+
+Не оставляй:
+
+```text
+console.log()
+console.error()
+debug output
+```
+
+которые не нужны в production/demo.
+
+---
+
+# 134. ACCESSIBLE ERROR MESSAGES
+
+Ошибки API / form:
+
+```text
+The payout amount exceeds your available balance.
+```
+
+вместо технических сообщений.
+
+---
+
+# 135. PERFORMANCE / BUNDLE
+
+Следи за bundle size.
+
+Не устанавливай огромную библиотеку ради одной маленькой функции, если можно решить ее 10 строками кода.
+
+Тяжелые charts / rich components можно lazy-load-ить.
+
+---
+
+# 136. IMAGE OPTIMIZATION
+
+Для реальных изображений используй `next/image`, где это применимо.
+
+Не вставляй огромные необработанные image assets.
+
+---
+
+# 137. FONTS
+
+Используй `next/font`.
+
+Не подключай шрифты через случайные CDN.
+
+Для начала используй аккуратный системный / современный sans-serif stack.
+
+---
+
+# 138. METADATA / APP STRUCTURE
+
+Добавь глобальный:
+
+```text
+favicon
+metadata
+viewport
+theme
+```
+
+---
+
+# 139. DEMO BRAND
+
+Пока используй нейтральный условный бренд.
+
+Например:
+
+```text
+PartnerOS
+```
+
+или другое профессиональное рабочее название.
+
+Не трать время на маркетинговый branding.
+
+Главное — продукт.
+
+---
+
+# 140. MAIN DEMO DATA
+
+Seed data должен уже содержать:
+
+```text
+pending partner applications
+active partners
+suspended partner
+high-risk partner
+active campaigns
+expired campaign
+pending commissions
+approved commissions
+reversed commission
+pending payout
+processing payout
+paid payout
+failed payout
+```
+
+То есть все основные UI states должны быть видны без ручного создания данных.
+
+---
+
+# 141. IMPORTANT UX STATES
+
+Обязательно должны существовать:
+
+```text
+Loading
+Loaded
+Empty
+Error
+Success
+Pending
+Disabled
+Suspended
+Rejected
+Archived
+```
+
+---
+
+# 142. PARTNER STATES
+
+Минимум:
+
+```text
+Pending
+Active
+Suspended
+Rejected
+```
+
+---
+
+# 143. CAMPAIGN STATES
+
+```text
+Draft
+Scheduled
+Active
+Paused
+Expired
+Archived
+```
+
+---
+
+# 144. PAYOUT STATES
+
+```text
+Pending
+Processing
+Paid
+Failed
+Rejected
+Cancelled
+```
+
+---
+
+# 145. COMMISSION STATES
+
+```text
+Pending
+Approved
+Paid
+Reversed
+Disputed
+```
+
+---
+
+# 146. APPLICATION STATES
+
+```text
+Pending
+Reviewing
+Approved
+Rejected
+```
+
+---
+
+# 147. RISK STATES
+
+```text
+Low
+Medium
+High
+Critical
+```
+
+---
+
+# 148. REFERRAL STATES
+
+```text
+Clicked
+Signed Up
+Converted
+Rejected
+Expired
+```
+
+---
+
+# 149. CREATE PARTNER FLOW
+
+Admin:
+
+```text
+Create Partner
+```
+
+Fields:
+
+```text
+First Name
+Last Name
+Email
+Company
+Country
+Website
+Tier
+Commission
+Status
+```
+
+Zod validation.
+
+После create:
+
+* partner appears in table
+* counters update
+* activity log changes
+* notification appears if relevant
+
+---
+
+# 150. EDIT PARTNER FLOW
+
+Admin:
+
+```text
+Edit
+```
+
+Изменить:
+
+```text
+Tier
+Status
+Commission
+Company
+```
+
+Изменения должны влиять на соответствующую UI/business state.
+
+---
+
+# 151. SUSPEND PARTNER FLOW
+
+После suspension:
+
+```text
+Partner status = suspended
+```
+
+И:
+
+* cannot create referral link
+* payout request disabled
+* status visible throughout system
+
+---
+
+# 152. APPROVE APPLICATION FLOW
+
+Application:
+
+```text
+Pending
+```
+
+Admin:
+
+```text
+Approve
+```
+
+После:
+
+```text
+Application → Approved
+Partner → Active
+```
+
+---
+
+# 153. COMMISSION ADJUSTMENT FLOW
+
+Admin:
+
+```text
+Adjust commission
+```
+
+Fields:
+
+```text
+Amount
+Type
+Reason
+```
+
+Добавить audit event.
+
+---
+
+# 154. REVERSAL FLOW
+
+Admin:
+
+```text
+Reverse commission
+```
+
+После:
+
+```text
+commission.status = reversed
+```
+
+и соответствующие totals обновляются.
+
+---
+
+# 155. PAYOUT FLOW
+
+Partner:
+
+```text
+Request payout
+```
+
+Admin:
+
+```text
+Approve
+```
+
+Then:
+
+```text
+Processing
+```
+
+Then:
+
+```text
+Paid
+```
+
+Balance updates.
+
+---
+
+# 156. CUSTOMER ATTRIBUTION
+
+Каждый customer должен иметь attribution metadata:
+
+```text
+partnerId
+referralId
+referralLinkId
+campaignId
+source
+```
+
+---
+
+# 157. ANALYTICS AGGREGATION
+
+Создай reusable selectors:
+
+```text
+revenueByDay
+clicksByDay
+conversionsByDay
+commissionByDay
+partnerPerformance
+campaignPerformance
+countryPerformance
+sourcePerformance
+```
+
+---
+
+# 158. PARTNER LEADERBOARD
+
+Admin:
+
+```text
+#1 Alex
+#2 Sarah
+#3 Michael
+```
+
+Metrics:
+
+```text
+Revenue
+Customers
+Conversion
+Commission
+```
+
+---
+
+# 159. TOP CAMPAIGNS
+
+Admin dashboard:
+
+```text
+Campaign
+Revenue
+Conversions
+Commission
+ROI
+```
+
+---
+
+# 160. TOP SOURCES
+
+Analytics:
+
+```text
+YouTube
+SEO
+Newsletter
+Paid Search
+Social
+Direct
+```
+
+---
+
+# 161. GEOGRAPHIC ANALYTICS
+
+Без необходимости в реальной карте можно использовать:
+
+* country ranking
+* bars
+* table
+
+Не нужно придумывать сложную географическую систему, если она не добавляет реальной ценности.
+
+---
+
+# 162. SUPPORT
+
+Partner:
+
+```text
+Support
+```
+
+Можно создать:
+
+```text
+FAQ
+Contact support
+Tickets
+```
+
+Минимальный workflow:
+
+```text
+Create ticket
+↓
+Open ticket
+↓
+Reply
+```
+
+---
+
+# 163. MESSAGING
+
+Admin может отправить:
+
+```text
+New message
+```
+
+Partner видит сообщение в inbox.
+
+Read/unread state должен обновляться.
+
+---
+
+# 164. NOTIFICATION LINKING
+
+Notification:
+
+```text
+Payout requested
+```
+
+при click ведет:
+
+```text
+/admin/payouts/123
+```
+
+или открывает relevant drawer.
+
+---
+
+# 165. BREADCRUMBS
+
+Используй breadcrumbs для nested pages.
+
+Например:
+
+```text
+Partners
+/
+Alex Johnson
+```
+
+---
+
+# 166. PAGE ACTIONS
+
+В header страницы:
+
+```text
+Create
+Export
+Filter
+More
+```
+
+Не размещай кнопки хаотично.
+
+---
+
+# 167. DESKTOP DENSITY
+
+На desktop интерфейс должен эффективно использовать пространство.
+
+Не делай огромные whitespace areas без причины.
+
+---
+
+# 168. MOBILE PRIORITIES
+
+На mobile primary actions должны быть легко доступны.
+
+Например:
+
+Partner payout:
+
+```text
+Available balance
+↓
+Request payout
+```
+
+Не заставляй пользователя искать action в меню из трех уровней.
+
+---
+
+# 169. DESIGN QUALITY BAR
+
+Продукт должен выглядеть так, будто:
+
+* над ним работал product designer
+* UI system уже существует
+* dashboard используется реальными людьми
+* architecture готовится к backend integration
+
+Не как AI-generated template.
+
+---
+
+# 170. НЕ ДЕЛАТЬ
+
+Запрещены следующие упрощения:
+
+```text
+Static HTML mockup
+Placeholder tables
+Non-functional buttons
+Fake charts made with divs
+Huge hardcoded arrays inside components
+Duplicate components everywhere
+One gigantic page.tsx
+One gigantic Zustand store
+All components marked "use client"
+No error handling
+No loading states
+No empty states
+```
+
+---
+
+# 171. PRIORITY 1
+
+В первую очередь полностью доведи до рабочего состояния:
+
+```text
+Partner Dashboard
+Admin Dashboard
+Partners
+Applications
+Customers
+Referrals
+Commissions
+Payouts
+Campaigns
+Analytics
+```
+
+---
+
+# 172. PRIORITY 2
+
+Затем:
+
+```text
+Referral Links
+Promo Materials
+Fraud & Risk
+Reports
+Messages
+Notifications
+Tiers
+Settings
+Audit Log
+```
+
+---
+
+# 173. PRIORITY 3
+
+Затем:
+
+```text
+micro-interactions
+advanced filtering
+column persistence
+demo tooling
+additional edge cases
+additional analytics
+```
+
+---
+
+# 174. ОСНОВНОЙ USER FLOW
+
+Полностью реализуй:
+
+```text
+APPLICATION
+    ↓
+ADMIN REVIEW
+    ↓
+APPROVAL
+    ↓
+PARTNER ACTIVE
+    ↓
+CREATE CAMPAIGN
+    ↓
+PARTNER CREATES REFERRAL LINK
+    ↓
+TRAFFIC
+    ↓
+SIGNUP
+    ↓
+CUSTOMER
+    ↓
+TRANSACTION
+    ↓
+COMMISSION
+    ↓
+APPROVAL
+    ↓
+PARTNER BALANCE
+    ↓
+PAYOUT REQUEST
+    ↓
+ADMIN APPROVAL
+    ↓
+PROCESSING
+    ↓
+PAID
+```
+
+Этот flow должен работать в demo.
+
+---
+
+# 175. SECONDARY FLOW — COMMISSION REVERSAL
+
+```text
+Customer transaction
+↓
+Commission
+↓
+Refund
+↓
+Commission reversed
+↓
+Balance recalculated
+```
+
+---
+
+# 176. SECONDARY FLOW — SUSPENSION
+
+```text
+Active partner
+↓
+Admin suspend
+↓
+Partner suspended
+↓
+New referral disabled
+↓
+Payout request disabled
+↓
+Warning shown
+```
+
+---
+
+# 177. SECONDARY FLOW — TIER UPGRADE
+
+```text
+Partner reaches threshold
+↓
+Tier upgraded
+↓
+Commission rate changes
+↓
+Partner sees new tier
+↓
+Admin sees new tier
+```
+
+---
+
+# 178. SECONDARY FLOW — RISK
+
+```text
+Suspicious activity
+↓
+Risk event
+↓
+High risk
+↓
+Admin review
+↓
+Flag / dismiss / suspend
+```
+
+---
+
+# 179. DOCUMENTATION
+
+Создай полноценный README:
+
+```text
+Overview
+Tech Stack
+Requirements
+Installation
+Development
+Build
+Architecture
+Folder Structure
+State Management
+Mock API
+Domain Model
+Demo Accounts
+Demo Flows
+How to Replace Mock API
+How to Add New Entity
+How to Add New Page
+```
+
+---
+
+# 180. ENVIRONMENT
+
+Если environment variables нужны, добавь:
+
+```text
+.env.example
+```
+
+Не добавляй реальные secrets.
+
+---
+
+# 181. CONFIGURATION
+
+Вынеси конфигурацию:
+
+```text
+program name
+currency
+timezone
+minimum payout
+default commission
+feature flags
+```
+
+а не хардкодь ее в компонентах.
+
+---
+
+# 182. FEATURE FLAGS
+
+Можно добавить:
+
+```text
+ENABLE_RISK
+ENABLE_MESSAGES
+ENABLE_PROMO_MATERIALS
+ENABLE_REWARDS
+```
+
+для демонстрации архитектуры.
+
+Не надо превращать это в сложную систему feature management.
+
+---
+
+# 183. FUTURE BACKEND
+
+Архитектура должна позволять позже заменить:
+
+```text
+MockRepository
+```
+
+на:
+
+```text
+ApiRepository
+```
+
+без переписывания компонентов.
+
+---
+
+# 184. FINAL QUALITY CHECK
+
+Перед завершением самостоятельно проверь:
+
+### Functional
+
+* navigation
+* routing
+* forms
+* validation
+* modals
+* drawers
+* search
+* filtering
+* sorting
+* pagination
+* creation
+* editing
+* deletion
+* approval
+* suspension
+* commission updates
+* payout lifecycle
+* theme switching
+* role switching
+* demo reset
+
+### Visual
+
+* desktop
+* tablet
+* mobile
+* light
+* dark
+* loading
+* empty
+* errors
+* success states
+
+### Technical
+
+```text
+TypeScript errors = 0
+Build errors = 0
+Lint errors = 0
+Broken imports = 0
+Dead buttons = 0
+```
+
+---
+
+# 185. ОБЯЗАТЕЛЬНЫЕ ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ
+
+Используй:
+
+```text
+Next.js
+TypeScript
+App Router
+Tailwind CSS
+shadcn/ui
+Lucide React
+Zustand
+React Hook Form
+Zod
+next-themes
+Recharts или актуальную chart library
+```
+
+Проверяй версии на момент реализации.
+
+---
+
+# 186. ОСОБО ВАЖНО ПРО SHADCN
+
+Не заменяй shadcn:
+
+```text
+MUI
+Ant Design
+Chakra
+Bootstrap
+DaisyUI
+```
+
+или другой UI framework.
+
+Основа интерфейса:
+
+> shadcn/ui + Tailwind CSS.
+
+Используй компоненты shadcn там, где они уже решают задачу:
+
+```text
+Button
+Card
+Badge
+Dialog
+Sheet
+Drawer
+Dropdown Menu
+Popover
+Tooltip
+Tabs
+Table
+Input
+Textarea
+Select
+Checkbox
+Radio
+Switch
+Calendar
+Command
+Pagination
+Skeleton
+Alert
+Avatar
+Breadcrumb
+Separator
+ScrollArea
+```
+
+При необходимости добавляй дополнительные компоненты через актуальный shadcn CLI.
+
+Официальная документация подтверждает, что компоненты shadcn добавляются непосредственно в код проекта и становятся частью проекта, а не скрытой внешней dependency abstraction. ([Shadcn][2])
+
+---
+
+# 187. ПРИНЦИП ПОКА НЕ НУЖЕН BACKEND
+
+Не нужно строить:
+
+```text
+PostgreSQL
+Prisma
+Drizzle
+Supabase
+Redis
+Kafka
+Docker
+microservices
+```
+
+если это не требуется текущей задачей.
+
+Сейчас задача:
+
+> frontend product prototype with realistic backend simulation.
+
+Но архитектуру сделай backend-ready.
+
+---
+
+# 188. НЕ ПЕРЕУСЛОЖНЯТЬ
+
+Не нужно:
+
+* микросервисов
+* event bus
+* настоящей очереди
+* настоящего authentication provider
+* сложной RBAC infrastructure
+* production payment integration
+
+если это не необходимо для frontend demo.
+
+---
+
+# 189. НО НЕ УПРОЩАТЬ UX
+
+При этом нельзя упрощать:
+
+* flows
+* states
+* validation
+* interaction
+* relationships
+* loading
+* errors
+* responsive
+* permissions
+* analytics
+* business rules
+
+---
+
+# 190. ПРАВИЛО АВТОНОМНЫХ РЕШЕНИЙ
+
+Не задавай мне вопросы по каждому незначительному решению.
+
+Если чего-то явно не указано:
+
+> принимай решение самостоятельно исходя из лучших практик современных B2B SaaS / affiliate platforms.
+
+Не останавливай разработку из-за мелких неоднозначностей.
+
+---
+
+# 191. ПРАВИЛО РАЗУМНОЙ ИНИЦИАТИВЫ
+
+Если в профессиональной партнерской платформе отсутствует очевидно необходимая сущность, состояние, screen или workflow, который я не перечислил явно:
+
+**добавь его самостоятельно.**
+
+Мне важнее целостность системы, чем буквальное следование каждой строке.
+
+---
+
+# 192. КЛЮЧЕВОЙ КРИТЕРИЙ
+
+Не оценивай результат по количеству страниц.
+
+Оцени его по:
+
+```text
+coherence
+functionality
+UX
+architecture
+data consistency
+business logic
+visual quality
+performance
+responsiveness
+```
+
+---
+
+# 193. ФИНАЛЬНЫЙ РЕЗУЛЬТАТ
+
+После завершения у меня должен быть полноценный запускаемый проект.
+
+Запуск:
+
+```bash
+npm install
+npm run dev
+```
+
+Далее я должен открыть приложение и иметь возможность:
+
+```text
+Login / Demo
+    ↓
+Admin
+    ↓
+Applications
+    ↓
+Approve Partner
+    ↓
+Partner created
+    ↓
+Switch to Partner
+    ↓
+Create Referral Link
+    ↓
+Simulate Referral
+    ↓
+Customer
+    ↓
+Transaction
+    ↓
+Commission
+    ↓
+Request Payout
+    ↓
+Switch to Admin
+    ↓
+Approve Payout
+    ↓
+Switch to Partner
+    ↓
+Updated Balance
+```
+
+И всё это должно происходить без backend.
+
+---
+
+# 194. ПОСЛЕДНЕЕ И САМОЕ ВАЖНОЕ
+
+**Не пытайся искусственно уменьшить scope только потому, что задача большая.**
+
+Мне специально нужен максимально насыщенный prototype, чтобы проверить, насколько хорошо ты способен:
+
+* проектировать сложные SaaS systems;
+* удерживать архитектуру большого frontend;
+* организовывать domain state;
+* строить reusable components;
+* поддерживать data consistency;
+* реализовывать реальные user flows;
+* работать с большим количеством состояний;
+* делать качественный responsive UI;
+* соблюдать UX consistency;
+* использовать современный Next.js ecosystem.
+
+Не превращай задачу в:
+
+```text
+10 красивых страниц + fake chart + несколько кнопок.
+```
+
+Мне нужен именно:
+
+> **functional affiliate platform simulator**
+
+с максимально убедительной логикой взаимодействия.
+
+При этом не надо превращать prototype в бессмысленный enterprise-overengineering. Сохраняй баланс между реалистичностью, качеством архитектуры, производительностью и скоростью разработки.
+
+---
+
+## Что я специально изменил относительно предыдущей версии
+
+Здесь есть несколько важных вещей, которые я бы **принципиально оставил именно так**.
+
+Во-первых, я убрал Vite-ориентированную модель и перевел всё на **Next.js App Router + Server/Client Component boundary**. Это сейчас гораздо правильнее для такого проекта; актуальная Next.js ветка 16.x уже включает современные механизмы Turbopack, routing/caching improvements и отдельный MCP-инструментарий для AI-агентов. ([Next.js][1])
+
+Во-вторых, я бы **не прописывал конкретные версии типа `next@16.2.x` прямо в промпте**. Лучше заставить агента перед стартом определить актуальные stable-версии через MCP/официальную документацию и поставить их. Это особенно важно сейчас, когда Next.js продолжает регулярно получать security releases и patch updates. ([Next.js][5])
+
+В-третьих, я добавил **Zod + React Hook Form как обязательную связку**, а не просто «можно использовать». Для такого количества CRUD-форм это сильно меняет качество прототипа: validation перестает быть декоративной.
+
+В-четвертых, я специально добавил **repository/service abstraction**. Это, на мой взгляд, одна из самых важных вещей во всем промпте. Иначе агент практически гарантированно начнет раскидывать mock arrays по компонентам, и через несколько экранов система развалится.
+
+И пятое — я бы **обязательно использовал стандартный monochrome shadcn как базу**, без попытки агента «улучшить» его какой-нибудь сиреневой SaaS-темой. Сам shadcn сейчас как раз подразумевает, что компоненты добавляются в ваш код и затем свободно адаптируются. ([Shadcn][2])
+
+По сути, теперь задача для агента звучит уже не как **«сделай мне админку и личный кабинет»**, а как **«построй локально работающий симулятор полноценной affiliate-платформы на современном Next.js stack»**. И вот это уже гораздо интереснее как тест его возможностей.
+
+[1]: https://nextjs.org/blog/next-16?utm_source=chatgpt.com "Next.js 16 | Next.js"
+[2]: https://ui.shadcn.com/docs/installation/next?utm_source=chatgpt.com "Next.js - shadcn/ui"
+[3]: https://ui.shadcn.com/docs/installation/manual?utm_source=chatgpt.com "Manual Installation - shadcn/ui"
+[4]: https://ui.shadcn.com/docs/dark-mode/next?utm_source=chatgpt.com "Next.js - shadcn/ui"
+[5]: https://nextjs.org/blog?utm_source=chatgpt.com "Next.js by Vercel - The React Framework | Next.js by Vercel - The React Framework"
